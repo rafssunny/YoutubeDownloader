@@ -7,25 +7,29 @@ import os # Diretório do Computador
 import threading # Processos em Segundo Plano
 import requests # Baixar dados
 from io import BytesIO # Criar Arquivo
-import sys
 
-if getattr(sys, 'frozen', False):
-    base_path = sys._MEIPASS
-else:
-    base_path = os.path.dirname(os.path.abspath(__file__))
+base_path = os.path.dirname(os.path.abspath(__file__))
 
 Titulo_video = None
 Thumb_video = None
 #Funções
+def centralizar(janela, largura, altura):
+    largura_janela = largura
+    altura_janela = altura
+    largura_tela = janela.winfo_screenwidth()
+    altura_tela = janela.winfo_screenheight()
+    pos_x = int((largura_tela/2) - (largura_janela/2))
+    pos_y = int((altura_tela/2) - (altura_janela/2))
+    janela.geometry(f'{largura_janela}x{altura_janela}+{pos_x}+{pos_y}')
 def telaajuda():
-    CTkMessagebox(title='Ajuda', message='1-Coloque o link do vídeo ou da playlist, e emseguida aperte na lupa ao lado\n''\n'
+    CTkMessagebox(title='Ajuda', message='1-Coloque o link do vídeo ou da playlist, e em seguida aperte na lupa ao lado\n''\n'
                                          '2-Escolha o formato do arquivo\n''\n'
                                          '3-Clique no ícone de download.\n''\n'
                                          'Todo conteúdo baixado estará na pasta YoutubeDownloader que é criada automaticamente na pasta Downloads.'
                   , icon='question', option_1='Ok')
 
 def abrirtwitter():
-    url = 'https://x.com/rafssunny'
+    url = 'https://linktr.ee/rafssunny'
     navegador = webbrowser.get()
     navegador.open(url)
 
@@ -119,7 +123,7 @@ try:
 except Exception as e:
     print('erro')
 janela.title('YouTube Downloader')
-janela.geometry('600x400')
+centralizar(janela, 600, 400)
 janela.resizable(width=False, height=False)
 janela._set_appearance_mode('dark')
 
@@ -134,6 +138,7 @@ Subtitulo = CTkLabel(janela, text=('feito por rafssunny'), font=('comic sans ms'
 #Botões
 LinkVideo = CTkEntry(janela,width=300,placeholder_text='Insira o link do vídeo...')
 LinkVideo.place(x=245, y=235)
+LinkVideo.bind('<Return>', lambda  event : pegarvideo())
 
 lupa_icone = CTkImage(dark_image=Image.open(os.path.join(base_path, 'lupa.png')), size=(21,21))
 Botao_pequisar = CTkButton(janela, width=10, height=10, text='', image=lupa_icone, fg_color='transparent',hover_color='black',
